@@ -16,7 +16,7 @@ Paso 1: Clonar el repositorio
 
 bash
 Copiar código
-git clone https://github.com/tu_usuario/APP-GANADERIA.git
+[git clone https://github.com/tu_usuario/APP-GANADERIA.git](https://github.com/ElPanadero123/Ganaderia_API.git)
 cd APP-GANADERIA
 
 Paso 2: Configurar la Base de Datos
