@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Ganaderia_API.Models;
 using Microsoft.AspNetCore.Authorization;
+using Ganaderia_API.Models.DTOs;
 
 namespace Ganaderia_API.Controllers
 {
@@ -77,16 +78,36 @@ namespace Ganaderia_API.Controllers
         // POST: api/Animales
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Animale>> PostAnimale(Animale animale)
+        public async Task<ActionResult<Animale>> PostAnimale(AnimaleCreateDto animaleDto)
         {
+            // Verificar si el usuario existe
+            var usuario = await _context.Usuarios.FindAsync(animaleDto.UsuarioId);
+            if (usuario == null)
+            {
+                return BadRequest("El usuario especificado no existe");
+            }
+
+            // Crear el objeto Animale a partir del DTO
+            var animale = new Animale
+            {
+                EspecieRaza = animaleDto.EspecieRaza,
+                Precio = animaleDto.Precio,
+                Nombre = animaleDto.Nombre,
+                Edad = animaleDto.Edad,
+                Ubicacion = animaleDto.Ubicacion,
+                Peso = animaleDto.Peso,
+                UsuarioId = animaleDto.UsuarioId,
+                FechaCreacion = DateTime.Now // Asigna la fecha de creación actual
+            };
+
             _context.Animales.Add(animale);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetAnimale", new { id = animale.Id }, animale);
         }
 
-        // DELETE: api/Animales/5
-        [HttpDelete("{id}")]
+            // DELETE: api/Animales/5
+            [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAnimale(int id)
         {
             var animale = await _context.Animales.FindAsync(id);
